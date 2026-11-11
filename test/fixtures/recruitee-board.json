@@ -1,0 +1,103 @@
+{
+  "_comment": [
+    "Source: https://imnoo.recruitee.com/api/offers/ — captured 2026-08-25, with rows borrowed from",
+    "the ethonai and climeworks boards so one fixture covers every case. parseBoard reads only",
+    "`offers`, so this key is inert.",
+    "CUT: the ~40 application-form keys every offer carries (options_*, open_questions, translations,",
+    "dynamic_fields, mailbox_email, sharing_*), plus most of each description/requirements.",
+    "KEPT VERBATIM: id, title, careers_url, status, city, country, country_code, location,",
+    "published_at, created_at, and the description/requirements split.",
+    "ADVERSARIAL CASES, in order: (1) a Zürich offer whose `location` reads 'Remote job' — the city",
+    "must win over that display string — and whose requirements sit in their own field, so a parser",
+    "reading `description` alone loses the half that decides a match; (2) an offer Swiss ONLY via",
+    "country_code 'CH', which the word list cannot match unless it is spelled out; (3) a Berlin offer,",
+    "excluded; (4) a Zürich offer with status 'closed', which Recruitee leaves in the feed and we must",
+    "skip; (5) a Zürich offer with no published_at, so postedAt falls back to created_at; (6) a Swiss",
+    "offer with no careers_url, skipped without throwing."
+  ],
+  "offers": [
+    {
+      "id": 2666211,
+      "title": "Product Operations Customer Manager",
+      "careers_url": "https://imnoo.recruitee.com/o/product-operations-customer-manager",
+      "status": "published",
+      "city": "Zürich",
+      "country": "Switzerland",
+      "country_code": "CH",
+      "location": "Remote job",
+      "published_at": "2026-07-03 10:44:03 UTC",
+      "created_at": "2026-07-03 10:43:25 UTC",
+      "description": "<p>We build software for the people who build the physical world. Your job is to make a tangible difference in manufacturing operations across Switzerland.</p>",
+      "requirements": "<p>(at least 2 should match)</p><ul><li>3+ years in a customer-facing product role.</li><li>German and English.</li></ul>"
+    },
+    {
+      "id": 2666212,
+      "title": "Senior AI Engineer",
+      "careers_url": "https://exeon.recruitee.com/o/senior-ai-engineer",
+      "status": "published",
+      "city": "HQ",
+      "country": null,
+      "country_code": "CH",
+      "location": null,
+      "published_at": "2026-08-01 09:00:00 UTC",
+      "created_at": "2026-08-01 09:00:00 UTC",
+      "description": "<p>Swiss only via country_code. The word list cannot match 'CH' unless it is spelled out first.</p>",
+      "requirements": ""
+    },
+    {
+      "id": 2666213,
+      "title": "Working Student Growth",
+      "careers_url": "https://ethonai.recruitee.com/o/working-student-growth",
+      "status": "published",
+      "city": "Berlin",
+      "country": "Germany",
+      "country_code": "DE",
+      "location": "Berlin",
+      "published_at": "2026-08-02 09:00:00 UTC",
+      "created_at": "2026-08-02 09:00:00 UTC",
+      "description": "<p>Not Swiss anywhere. Must be excluded.</p>",
+      "requirements": ""
+    },
+    {
+      "id": 2666214,
+      "title": "Head of Operations",
+      "careers_url": "https://climeworks.recruitee.com/o/head-of-operations",
+      "status": "closed",
+      "city": "Zürich",
+      "country": "Switzerland",
+      "country_code": "CH",
+      "location": "Zürich",
+      "published_at": "2026-03-02 09:00:00 UTC",
+      "created_at": "2026-03-01 09:00:00 UTC",
+      "description": "<p>Swiss, but no longer published.</p>",
+      "requirements": ""
+    },
+    {
+      "id": 2666215,
+      "title": "Sorbent Characterization Intern",
+      "careers_url": "https://climeworks.recruitee.com/o/sorbent-characterization-intern",
+      "status": "published",
+      "city": "Opfikon",
+      "country": "Switzerland",
+      "country_code": "CH",
+      "location": "Opfikon",
+      "published_at": null,
+      "created_at": "2026-06-15 08:30:00 UTC",
+      "description": "<p>No published_at, so postedAt falls back to created_at.</p>",
+      "requirements": ""
+    },
+    {
+      "id": 2666216,
+      "title": "Office Manager",
+      "status": "published",
+      "city": "Zürich",
+      "country": "Switzerland",
+      "country_code": "CH",
+      "location": "Zürich",
+      "published_at": "2026-08-03 09:00:00 UTC",
+      "created_at": "2026-08-03 09:00:00 UTC",
+      "description": "<p>Swiss, but no careers_url — nothing to store or dedupe on.</p>",
+      "requirements": ""
+    }
+  ]
+}

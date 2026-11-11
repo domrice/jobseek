@@ -1,0 +1,105 @@
+{
+  "_comment": [
+    "Source: https://boards-api.greenhouse.io/v1/boards/scandit/jobs?content=true — captured 2026-08-25.",
+    "JSON has no comment syntax, so this key carries the header the HTML fixtures put in a comment;",
+    "parseBoard reads only `jobs`, so it is inert.",
+    "CUT: data_compliance, metadata, departments, requisition_id, language, internal_job_id, the ai_*",
+    "keys, and all but a few hundred bytes of each `content`. KEPT VERBATIM: id, title, absolute_url,",
+    "location, offices, first_published, updated_at, and the exact HTML-escaping of `content`.",
+    "ADVERSARIAL CASES, in order: (1) a normal Zurich posting whose bare location.name disagrees with",
+    "its fully-addressed offices entry; (2) a non-CH posting that must be excluded; (3) a remote",
+    "posting with NO offices whose Swiss-ness exists only inside a multi-country location string —",
+    "the row that is lost if only offices are read; (4) a posting with null location and no offices,",
+    "which must be dropped rather than guessed; (5) a CH posting with first_published null, so",
+    "postedAt must fall back to updated_at; (6) a CH posting missing absolute_url, which must be",
+    "skipped without throwing; (7) a Lisbon posting at an employer whose office list includes Zurich,",
+    "which must be EXCLUDED — offices are the company's, not the job's, and OR-ing them admitted 15",
+    "of 187 rows wrongly on the first live run; (8) a posting with no location.name at all, where the",
+    "Swiss office is the only evidence there is and therefore does decide. 'Sion' also appears inside",
+    "'Mission' in case 2's title to catch a word-boundary regression."
+  ],
+  "jobs": [
+    {
+      "id": 8043068,
+      "title": "Product Manager (ShelfView)",
+      "absolute_url": "https://www.scandit.com/careers/job-description/?gh_jid=8043068",
+      "location": { "name": "Zurich" },
+      "offices": [{ "location": "Zürich, Zürich, Switzerland" }],
+      "first_published": "2026-07-02T04:54:17-04:00",
+      "updated_at": "2026-08-20T05:56:55-04:00",
+      "content": "&lt;p&gt;&lt;strong&gt;Product Manager (ShelfView)&lt;/strong&gt;&lt;/p&gt;\n&lt;p&gt;Scandit gives people superpowers. We are looking for a product manager to own ShelfView, our retail shelf-monitoring product, from discovery through launch. You will work with engineering, design &amp;amp; sales, and you will be based in our Zurich&amp;nbsp;office.&lt;/p&gt;\n&lt;p&gt;&lt;strong&gt;What you will do&lt;/strong&gt;&lt;/p&gt;\n&lt;ul&gt;&lt;li&gt;Own the roadmap and the backlog.&lt;/li&gt;&lt;li&gt;Talk to customers every week.&lt;/li&gt;&lt;/ul&gt;"
+    },
+    {
+      "id": 8043069,
+      "title": "Mission Control Engineer",
+      "absolute_url": "https://www.scandit.com/careers/job-description/?gh_jid=8043069",
+      "location": { "name": "Denver, CO" },
+      "offices": [{ "location": "Denver, Colorado, United States" }],
+      "first_published": "2026-08-01T04:54:17-04:00",
+      "updated_at": "2026-08-19T05:56:55-04:00",
+      "content": "&lt;p&gt;A posting that must never be stored: it is not in Switzerland.&lt;/p&gt;"
+    },
+    {
+      "id": 8043070,
+      "title": "Forward Deployed Engineer - EMEA",
+      "absolute_url": "https://www.scandit.com/careers/job-description/?gh_jid=8043070",
+      "location": {
+        "name": "Remote Ireland; Remote, Austria; Remote, Denmark; Remote, Switzerland; Remote, United Kingdom"
+      },
+      "offices": [],
+      "first_published": "2026-08-10T09:00:00-04:00",
+      "updated_at": "2026-08-21T09:00:00-04:00",
+      "content": "&lt;p&gt;Remote across EMEA, Switzerland included. Only the location string says so — there is no office record.&lt;/p&gt;"
+    },
+    {
+      "id": 8043071,
+      "title": "Chief of Staff",
+      "absolute_url": "https://www.scandit.com/careers/job-description/?gh_jid=8043071",
+      "location": null,
+      "offices": null,
+      "first_published": "2026-08-05T09:00:00-04:00",
+      "updated_at": "2026-08-05T09:00:00-04:00",
+      "content": "&lt;p&gt;No location anywhere. Dropped, never guessed.&lt;/p&gt;"
+    },
+    {
+      "id": 8043072,
+      "title": "Senior Software Engineer, Matrix Scan",
+      "absolute_url": "https://www.scandit.com/careers/job-description/?gh_jid=8043072",
+      "location": { "name": "Zürich" },
+      "offices": [{ "location": "Zürich, Zürich, Switzerland" }],
+      "first_published": null,
+      "updated_at": "2026-08-18T11:30:00-04:00",
+      "content": "&lt;p&gt;No first_published on this one, so postedAt falls back to updated_at.&lt;/p&gt;"
+    },
+    {
+      "id": 8043073,
+      "title": "Solutions Architect",
+      "location": { "name": "Basel" },
+      "offices": [{ "location": "Basel, Basel-Stadt, Switzerland" }],
+      "first_published": "2026-08-12T09:00:00-04:00",
+      "updated_at": "2026-08-12T09:00:00-04:00",
+      "content": "&lt;p&gt;Swiss, but has no absolute_url — skipped without throwing.&lt;/p&gt;"
+    },
+    {
+      "id": 8043074,
+      "title": "Staff Engineer, Compute",
+      "absolute_url": "https://www.scandit.com/careers/job-description/?gh_jid=8043074",
+      "location": { "name": "Lisbon, Portugal" },
+      "offices": [{ "location": "Zürich, Zürich, Switzerland" }],
+      "first_published": "2026-08-14T09:00:00-04:00",
+      "updated_at": "2026-08-14T09:00:00-04:00",
+      "content": "&lt;p&gt;The job is in Lisbon. Only the employer's office list is Swiss, and that is not the job's location.&lt;/p&gt;"
+    },
+    {
+      "id": 8043075,
+      "title": "Office Manager",
+      "absolute_url": "https://www.scandit.com/careers/job-description/?gh_jid=8043075",
+      "location": null,
+      "offices": [{ "location": "Genève, Genève, Switzerland" }],
+      "first_published": "2026-08-15T09:00:00-04:00",
+      "updated_at": "2026-08-15T09:00:00-04:00",
+      "content": "&lt;p&gt;Declares no location, so the office record is the only evidence and it decides.&lt;/p&gt;"
+    }
+  ],
+  "meta": { "total": 8 }
+}

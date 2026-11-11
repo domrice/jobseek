@@ -1,0 +1,37 @@
+[
+  {
+    "_comment": "Source: GET https://layered.ch/wp-json/wp/v2/job-listings — captured 2026-10-06. Cut to the fields read; content shortened. Adversarial: a Tailwind class `[li_&]` beside the vc_ shortcodes, a German posting, a filled posting, one with no link.",
+    "id": 2215,
+    "date": "2026-07-27T15:35:22",
+    "date_gmt": "2026-07-27T13:35:22",
+    "link": "https://layered.ch/job/robotics-control-systems-engineer-robot-control-motion-systems-integration/",
+    "title": { "rendered": "Robotics Control &#038; Systems Engineer (Robot Control, Motion &#038; Systems Integration)" },
+    "content": {
+      "rendered": "<div class=\"wpb-content-wrapper\"><p>[vc_row unlock_row=&#8221;&#8221; gutter_size=&#8221;3&#8243;][vc_column][vc_column_text]</p>\n<h1>Robotics Control &amp; Systems Engineer</h1>\n<ul class=\"[li_&amp;]:mb-0\"><li>ROS 2</li></ul>\n<p>[/vc_column_text][/vc_column][/vc_row]</p>\n</div>"
+    },
+    "meta": { "_job_location": "Lupfig, Switzerland", "_filled": 0 }
+  },
+  {
+    "id": 1690,
+    "date_gmt": "2026-02-11T10:30:58",
+    "link": "https://layered.ch/job/lab-manager-gipser-spezialist-baurobotik/",
+    "title": { "rendered": "Lab Manager / Gipser-Spezialist Baurobotik" },
+    "content": { "rendered": "<p>Gips</p>" },
+    "meta": { "_job_location": "Lupfig, Switzerland", "_filled": 0 }
+  },
+  {
+    "id": 1,
+    "date_gmt": "2026-02-11T10:30:58",
+    "link": "https://layered.ch/job/filled/",
+    "title": { "rendered": "Filled" },
+    "meta": { "_job_location": "Lupfig, Switzerland", "_filled": 1 }
+  },
+  {
+    "id": 2,
+    "date_gmt": "2026-02-11T10:30:58",
+    "link": "https://layered.ch/job/munich/",
+    "title": { "rendered": "Munich" },
+    "meta": { "_job_location": "München, Deutschland", "_filled": 0 }
+  },
+  { "id": 3, "title": { "rendered": "No link" }, "meta": { "_job_location": "Lupfig, Switzerland" } }
+]

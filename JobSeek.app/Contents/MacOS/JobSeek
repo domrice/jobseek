@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Dock icon. Hands start.command to Terminal rather than running the server itself: the window is
+# how you watch the run and how you stop it (close it, or Ctrl-C).
+# The bundle lives at the repo root, so the root is three levels up from Contents/MacOS.
+exec open -a Terminal "$(cd "$(dirname "$0")/../../.." && pwd)/start.command"

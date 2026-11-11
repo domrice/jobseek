@@ -1,0 +1,1 @@
+ALTER TABLE `search_profiles` DROP COLUMN `last_rescored_at`;

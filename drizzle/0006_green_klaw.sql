@@ -1,0 +1,1 @@
+ALTER TABLE `job_scores` ADD `llm_think` text;

@@ -1,0 +1,61 @@
+[
+  {
+    "_comment": "Source: https://api.lever.co/v0/postings/sonarsource?mode=json — captured 2026-08-25. JSON has no comment syntax and Lever answers with a bare array, so this header rides on a first element that parseBoard drops for having no id/text/hostedUrl. CUT: descriptionPlain, additionalPlain, openingPlain, descriptionBody(-Plain), applyUrl, workplaceType, and most of each description. KEPT VERBATIM: id, text, hostedUrl, createdAt, categories, country, and the four-part description/lists/additional split. ADVERSARIAL CASES, in order: (1) a Geneva posting whose body is split across description + two lists + additional, so a parser reading only `description` loses the requirements; (2) a posting Swiss only via categories.allLocations, which must be KEPT — allLocations are the job's places, not the company's offices; (3) a London posting with no Swiss location anywhere, excluded; (4) a Zurich posting with no createdAt, so postedAt must be null rather than guessed; (5) a Swiss posting with no hostedUrl, skipped without throwing."
+  },
+  {
+    "id": "54743786-1ad7-4be7-bcbe-67f660e9c381",
+    "text": "Account Based Marketing (ABM) Manager",
+    "hostedUrl": "https://jobs.lever.co/sonarsource/54743786-1ad7-4be7-bcbe-67f660e9c381",
+    "createdAt": 1785155309260,
+    "country": "CH",
+    "categories": { "location": "Geneva", "allLocations": ["Geneva"] },
+    "description": "<div><p>Who is Sonar? We build code quality tooling used by millions of developers.</p></div>",
+    "lists": [
+      { "text": "What you will do", "content": "<li>Own the ABM programme end to end.</li><li>Partner with sales on target accounts.</li>" },
+      { "text": "Requirements", "content": "<li>5+ years in B2B marketing.</li><li>Fluent English; French a plus.</li>" }
+    ],
+    "additional": "<div><p>We value diversity, equity and inclusion.</p></div>"
+  },
+  {
+    "id": "aa11bb22-cc33-dd44-ee55-ff6677889900",
+    "text": "Staff Engineer, Clean Code",
+    "hostedUrl": "https://jobs.lever.co/sonarsource/aa11bb22-cc33-dd44-ee55-ff6677889900",
+    "createdAt": 1785500000000,
+    "country": "GB",
+    "categories": { "location": "London", "allLocations": ["London", "Zurich"] },
+    "description": "<div><p>Swiss only via allLocations. A role open in London and Zurich is a Zurich role.</p></div>",
+    "lists": [],
+    "additional": ""
+  },
+  {
+    "id": "bb22cc33-dd44-ee55-ff66-778899001122",
+    "text": "Enterprise Account Executive, UK",
+    "hostedUrl": "https://jobs.lever.co/sonarsource/bb22cc33-dd44-ee55-ff66-778899001122",
+    "createdAt": 1785600000000,
+    "country": "GB",
+    "categories": { "location": "London", "allLocations": ["London"] },
+    "description": "<div><p>No Swiss location anywhere. Must be excluded.</p></div>",
+    "lists": [],
+    "additional": ""
+  },
+  {
+    "id": "cc33dd44-ee55-ff66-7788-990011223344",
+    "text": "Developer Advocate",
+    "hostedUrl": "https://jobs.lever.co/sonarsource/cc33dd44-ee55-ff66-7788-990011223344",
+    "country": "CH",
+    "categories": { "location": "Zurich", "allLocations": ["Zurich"] },
+    "description": "<div><p>No createdAt on this one, so postedAt is null rather than invented.</p></div>",
+    "lists": [],
+    "additional": ""
+  },
+  {
+    "id": "dd44ee55-ff66-7788-9900-112233445566",
+    "text": "Office Coordinator",
+    "createdAt": 1785700000000,
+    "country": "CH",
+    "categories": { "location": "Geneva", "allLocations": ["Geneva"] },
+    "description": "<div><p>Swiss, but no hostedUrl — nothing to store or dedupe on, so it is skipped.</p></div>",
+    "lists": [],
+    "additional": ""
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "_comment": [
+    "Source: GET https://roche.wd3.myworkdayjobs.com/wday/cxs/roche/roche-ext/job/Basel/... —",
+    "captured 2026-10-06. jobPostingInfo cut to the fields read plus postedOn; description shortened.",
+    "Adversarial: primary location swapped to Penzberg (it was Basel) so the Swiss site has to be",
+    "found in additionalLocations, after the non-Swiss Mannheim."
+  ],
+  "jobPostingInfo": {
+    "id": "12638e562995103d32e1c569103b0000",
+    "title": "Data Engineer",
+    "jobDescription": "<p>At Roche you can show up as yourself.</p><ul><li>Python</li></ul>",
+    "location": "Penzberg",
+    "additionalLocations": ["Mannheim", "Basel", "Rotkreuz"],
+    "postedOn": "Posted 7 Days Ago",
+    "startDate": "2026-09-29",
+    "jobReqId": "202609-124825",
+    "externalUrl": "https://roche.wd3.myworkdayjobs.com/roche-ext/job/Basel/Data-Engineer_202609-124825"
+  }
+}

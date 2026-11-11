@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Source:   https://swissdevjobs.ch/rss
+  Captured: 2026-08-23 (feed lastBuildDate 2026-08-22)
+  Kept verbatim: the rss/channel envelope with its namespaces, every <item> child tag the parser
+    reads (title, link, guid, pubDate, description), and both href forms including the
+    ?utm_source=our_rss_feed query the live feed appends to link *and* guid.
+  Cut: 172 of 176 items; the <image>, <category> and <atom:link> channel blocks; the per-item
+    <enclosure>; and each description's body down to its first two elements (the live median is
+    ~2.9 KB of <ul>/<br> markup). <content:encoded> is cut entirely — it is byte-identical to
+    <description> in all 176 live items, which is why the adapter reads only one of them.
+  Encodes, adversarially:
+    - item 1: the normal shape — role, " @ ", company, and a trailing [CHF x - y] bracket that must
+      be stripped off the title and must not become part of the company.
+    - item 2: a role containing its own " @ ", so the split has to be on the *last* one.
+    - item 3: no " @ " at all → company null, title untouched, and an unparseable <pubDate> → null.
+    - item 4: a duplicate of item 1's link, which must be dropped rather than overwrite it, and an
+      empty <description> → null.
+-->
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>SwissDevJobs - tech &amp; IT jobs with salary info in Switzerland</title>
+        <link>https://swissdevjobs.ch/</link>
+        <description>Jobs from https://swissdevjobs.ch. Transparent IT Job board with mandatory info about salary and tech stacks.</description>
+        <lastBuildDate>Sat, 22 Aug 2026 14:17:53 GMT</lastBuildDate>
+        <language>en</language>
+        <item>
+            <title><![CDATA[Senior Platform Engineer (80%-100%) @ ONZACK AG [CHF 115'000 - 130'000]]]></title>
+            <link>https://swissdevjobs.ch/jobs/ONZACK-AG-Senior-Platform-Engineer-80-100?utm_source=our_rss_feed&amp;utm_medium=our_rss_feed</link>
+            <guid isPermaLink="false">https://swissdevjobs.ch/jobs/ONZACK-AG-Senior-Platform-Engineer-80-100?utm_source=our_rss_feed&amp;utm_medium=our_rss_feed</guid>
+            <pubDate>Mon, 03 Aug 2026 20:36:43 GMT</pubDate>
+            <description><![CDATA[<p><b>Salary: CHF 115'000 - 130'000 per year</b></p>
+    <b>Requirements:</b>
+    <ul><li>Persönlich bist du aufgeschlossen, hilfsbereit, motiviert und engagiert. Verhandlungssichere Deutschkenntnisse und gute Englischkenntnisse in Wort und Schrift werden vorausgesetzt.</li><li></li></ul>]]></description>
+        </item>
+        <item>
+            <title><![CDATA[DevOps @ Scale Engineer @ Lakeside Analytics GmbH [CHF 100'000 - 130'000]]]></title>
+            <link>https://swissdevjobs.ch/jobs/Lakeside-Analytics-GmbH-DevOps-at-Scale-Engineer?utm_source=our_rss_feed&amp;utm_medium=our_rss_feed</link>
+            <guid isPermaLink="false">https://swissdevjobs.ch/jobs/Lakeside-Analytics-GmbH-DevOps-at-Scale-Engineer?utm_source=our_rss_feed&amp;utm_medium=our_rss_feed</guid>
+            <pubDate>Fri, 07 Aug 2026 06:00:00 GMT</pubDate>
+            <description><![CDATA[<p><b>Salary: CHF 100'000 - 130'000 per year</b></p>
+    <b>Responsibilities:</b>
+    <ul><li>Kubernetes, Terraform and a lot of Go.</li></ul>]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Werkstudent Frontend]]></title>
+            <link>https://swissdevjobs.ch/jobs/Werkstudent-Frontend</link>
+            <guid isPermaLink="false">https://swissdevjobs.ch/jobs/Werkstudent-Frontend</guid>
+            <pubDate>vor 3 Tagen</pubDate>
+            <description><![CDATA[<p>React, TypeScript, 40%.</p>]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Senior Platform Engineer (80%-100%) @ ONZACK AG [CHF 115'000 - 130'000]]]></title>
+            <link>https://swissdevjobs.ch/jobs/ONZACK-AG-Senior-Platform-Engineer-80-100?utm_source=our_rss_feed&amp;utm_medium=our_rss_feed</link>
+            <guid isPermaLink="false">https://swissdevjobs.ch/jobs/ONZACK-AG-Senior-Platform-Engineer-80-100?utm_source=our_rss_feed&amp;utm_medium=our_rss_feed</guid>
+            <pubDate>Mon, 03 Aug 2026 20:36:43 GMT</pubDate>
+            <description><![CDATA[]]></description>
+        </item>
+    </channel>
+</rss>

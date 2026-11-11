@@ -1,0 +1,154 @@
+@import 'tailwindcss';
+
+/* ponytail: two weights, 400 and 600. Ceiling: no italic, no 700. Upgrade path: add a woff2 to
+   public/fonts and a block here, no config file. */
+@font-face {
+  font-family: 'Titillium Web';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/titillium-web-v17-latin-regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Titillium Web';
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/titillium-web-v17-latin-600.woff2') format('woff2');
+}
+
+@theme {
+  --font-sans: 'Titillium Web', ui-sans-serif, system-ui, sans-serif;
+  /* Neutral graphite ground, hue 265 at chroma 0.006-0.010 — low enough to read as a plain dark
+     grey, cool enough that the warm accent on top of it looks intended rather than stray. The
+     tint is doing one job: it is the cold half of a warm/cold pair, not a colour of its own. */
+  --color-bg: oklch(0.19 0.006 265);
+  --color-surface: oklch(0.24 0.008 265);
+  --color-line: oklch(0.32 0.01 265);
+  /* Interactive boundaries only. SC 1.4.11 wants 3:1 non-text contrast, and --color-line is
+     1.46:1 on the page / 1.30:1 in a card — fine for a divider that governs nothing, far under
+     the floor for a border that is the only thing identifying a control. Same hue and chroma,
+     L binary-searched to the first value clearing 3:1 on both grounds (measured floor 0.5211;
+     3.50:1 / 3.12:1 here). Structure keeps --color-line: raising that token would repaint every
+     divider in the app. */
+  --color-control: oklch(0.53 0.008 265);
+  --color-ink: oklch(0.94 0.004 265);
+  --color-muted: oklch(0.68 0.008 265);
+  /* Orange. The one accent: links, the live run, matched keywords, the primary button's fill.
+     8.23:1 on the page. Hue 52 was picked for its clearance, not its warmth — it is ~37 degrees
+     off the poor-match red below and ~36 off the amber, and those two gaps are the only thing
+     keeping a link from reading as a score. A coral (hue ~32) would have sat on top of the red. */
+  --color-accent: oklch(0.76 0.15 52);
+  /* Hover only. Brightened, not hue-shifted: a filled primary that changes hue on hover reads as
+     a different button. */
+  --color-accent-hi: oklch(0.83 0.14 52);
+  /* Visited only, on a job title in the list. The same hue 52 dimmed in lightness and chroma
+     (0.76/0.15 -> 0.62/0.09), so the link is still the one lamp and no fourth hue appears: a row
+     already read is turned down, not recoloured. 4.93:1 on the page ground — a text colour, not a
+     disabled one — against the accent's 8.23:1, which is the step that makes it scannable down a
+     column of fifty. */
+  --color-accent-dim: oklch(0.62 0.09 52);
+  /* Verdict hues, held clear of the accent from both sides. warn was yellowed to 88 and bad
+     deepened to 15 when the accent moved into the orange band — at 55 and 25 they bracketed it
+     within 20 degrees, and a warning chip beside a link is exactly where that shows. */
+  --color-warn: oklch(0.8 0.13 88);
+  --color-bad: oklch(0.65 0.19 15);
+  --color-good: oklch(0.75 0.15 150);
+  /* One easing for every state change. Ease-out, because a control that decelerates into its
+     hover state feels pressed rather than animated. */
+  --ease-control: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Dark only, no toggle (DESIGN.md). scroll-padding-top is SC 2.4.11: the 55px sticky header
+   would cover a focus target scrolled to the top. */
+:root {
+  color-scheme: dark;
+  scroll-padding-top: 4rem;
+  /* Checked checkbox fill, so it is the accent and not the browser's blue (DESIGN.md). */
+  accent-color: var(--color-accent);
+  /* The parts we did not draw. A default scrollbar and a default selection highlight belong to
+     no palette, and both are on screen for the whole of a triage session. */
+  scrollbar-color: var(--color-control) var(--color-bg);
+}
+
+::selection {
+  background: --alpha(var(--color-accent) / 25%);
+  color: var(--color-ink);
+}
+
+body {
+  @apply bg-bg text-ink font-sans antialiased;
+}
+
+/* Keyboard nav is not the lazy part. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  @apply outline-2 outline-offset-2 outline-accent;
+}
+
+/* Checkboxes excluded: all six declarations are inert on one; type=date stays in (DESIGN.md). */
+:where(input:not([type='checkbox']), select, textarea) {
+  @apply bg-surface border border-control rounded px-2 py-1 text-sm;
+}
+
+/* Unlayered so it beats `text-accent`; :visited honours only `color` (DESIGN.md). */
+.job-link:visited {
+  color: var(--color-accent-dim);
+}
+
+.job-link:visited:hover,
+.job-link:visited:focus-visible {
+  color: var(--color-accent);
+}
+
+/* Chrome's own placeholder grey is 3.57:1 on the panel; muted clears 4.5:1 (DESIGN.md). */
+::placeholder {
+  color: var(--color-muted);
+}
+
+:where(code) {
+  @apply bg-surface border border-line rounded px-1 py-0.5 font-mono text-[0.9em];
+}
+
+@layer components {
+  /* Secondary. Outlined at rest, tinted and lifted on hover: the same tactile grammar as the
+     primary, one step quieter. Four repeats of the accent button had already drifted into two
+     variants (one with transition-colors, one without) and three disabled opacities. One
+     definition each instead. Utilities still win over these, so `.btn px-2` is the tighter
+     pagination size. */
+  .btn {
+    @apply rounded border border-control px-3 py-1 text-sm text-ink transition-[color,background-color,border-color,translate] duration-150 ease-control hover:-translate-y-px hover:border-accent hover:bg-accent/10 hover:text-accent active:translate-y-0;
+    /* `[aria-disabled]` beside `:disabled` because a long-running action must not remove its own
+       trigger from the tab order (SC 2.4.3): the three run buttons stay focusable and reject the
+       click in their handler instead. Both spellings get the identical treatment, so a button
+       looks the same whichever mechanism made it inert. */
+    &:disabled,
+    &[aria-disabled='true'] {
+      @apply opacity-50 hover:translate-y-0 hover:border-control hover:bg-transparent hover:text-ink;
+    }
+  }
+  /* Primary. Filled brass with the page's own ground as its text — the only filled surface in
+     the app, which is what makes "Seek Jobs" and "Create profile" findable without a second
+     accent. Text is --color-bg, 8.63:1 on the fill. The lift is 1px and the press returns it;
+     no shadow, by the same decision that keeps the rest of the app flat. */
+  .btn-accent {
+    @apply rounded border border-accent bg-accent px-3 py-1 text-sm font-semibold text-bg transition-[background-color,border-color,translate] duration-150 ease-control hover:-translate-y-px hover:border-accent-hi hover:bg-accent-hi active:translate-y-0;
+    &:disabled,
+    &[aria-disabled='true'] {
+      @apply opacity-50 hover:translate-y-0 hover:border-accent hover:bg-accent;
+    }
+  }
+  /* Every bordered panel: px-4 py-3, not the px-4 py-4 / p-3 it had drifted into. */
+  .card {
+    @apply rounded border border-line px-4 py-3;
+  }
+  /* .chip: a claim about the posting, boxed. .qualifier: a note on the score, unboxed (DESIGN.md). */
+  .chip,
+  .qualifier {
+    @apply text-[10px] font-semibold uppercase tracking-wider leading-[1.4];
+  }
+
+  /* Tone passed separately. inline-block keeps it 16px even inline (DESIGN.md). */
+  .chip {
+    @apply inline-block rounded border px-1;
+  }
+}

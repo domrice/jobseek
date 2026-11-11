@@ -1,0 +1,15 @@
+node_modules/
+.nuxt/
+.output/
+*.db*
+.env
+cv.md
+logs/
+scratchpad/
+.DS_Store
+.claude/
+.impeccable/
+.playwright-mcp/
+*.log
+PRODUCT.md
+DESIGN.md

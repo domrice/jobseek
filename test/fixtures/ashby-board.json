@@ -1,0 +1,85 @@
+{
+  "_comment": [
+    "Source: https://api.ashbyhq.com/posting-api/job-board/langfuse — captured 2026-08-25, with rows",
+    "borrowed from the deepjudge and ledger boards so one fixture covers every case.",
+    "CUT: department, team, employmentType, compensation, isRemote, and most of each descriptionHtml.",
+    "KEPT VERBATIM: id, title, jobUrl, location, secondaryLocations (including the nested",
+    "address.postalAddress shape), publishedAt, isListed.",
+    "ADVERSARIAL CASES, in order: (1) the Langfuse row whose primary location is the useless 'Europe'",
+    "and which is Swiss ONLY via secondaryLocations — it must be kept AND stored as 'Zurich', not",
+    "'Europe'; (2) a plain Zurich posting where the primary location wins; (3) a Swiss row reachable",
+    "only through address.postalAddress.addressCountry, with no city text anywhere; (4) a London",
+    "posting with a Paris secondary and nothing Swiss, excluded; (5) a Zurich posting with",
+    "isListed:false, which Ashby is no longer showing and neither should we; (6) a Swiss posting with",
+    "no publishedAt, so postedAt is null rather than guessed."
+  ],
+  "apiVersion": "1",
+  "jobs": [
+    {
+      "id": "1225fa3d-d590-41d2-b798-ef927320fb2e",
+      "title": "Senior Backend Engineer (Data Infrastructure)",
+      "jobUrl": "https://jobs.ashbyhq.com/langfuse/1225fa3d-d590-41d2-b798-ef927320fb2e",
+      "location": "Europe",
+      "secondaryLocations": [
+        { "location": "Zurich", "address": { "postalAddress": { "addressCountry": "Switzerland" } } },
+        { "location": "Munich", "address": { "postalAddress": { "addressCountry": "Germany" } } }
+      ],
+      "publishedAt": "2026-02-17T17:52:58.822+00:00",
+      "isListed": true,
+      "descriptionHtml": "<h1><strong>About Langfuse</strong></h1><p>Open Source LLM Engineering Platform that helps teams collaboratively debug, analyze and iterate on their LLM applications.</p>"
+    },
+    {
+      "id": "2336ab4e-e601-52f3-c8a9-fa0384319c3f",
+      "title": "Software Engineer - Applications",
+      "jobUrl": "https://jobs.ashbyhq.com/deepjudge/2336ab4e-e601-52f3-c8a9-fa0384319c3f",
+      "location": "Zurich HQ",
+      "secondaryLocations": [],
+      "publishedAt": "2026-07-01T08:00:00.000+00:00",
+      "isListed": true,
+      "descriptionHtml": "<p>The primary location is Swiss, so it is used as-is.</p>"
+    },
+    {
+      "id": "3447bc5f-f712-63a4-d9ba-0b1495420d40",
+      "title": "Legal Engineer",
+      "jobUrl": "https://jobs.ashbyhq.com/omnilex/3447bc5f-f712-63a4-d9ba-0b1495420d40",
+      "location": "Hybrid",
+      "secondaryLocations": [
+        { "location": "HQ", "address": { "postalAddress": { "addressCountry": "Switzerland" } } }
+      ],
+      "publishedAt": "2026-06-10T08:00:00.000+00:00",
+      "isListed": true,
+      "descriptionHtml": "<p>No city text anywhere: only the nested addressCountry says Switzerland.</p>"
+    },
+    {
+      "id": "4558cd60-0823-74b5-eacb-1c25a6531e51",
+      "title": "Senior Product Marketing Manager - B2C",
+      "jobUrl": "https://jobs.ashbyhq.com/ledger/4558cd60-0823-74b5-eacb-1c25a6531e51",
+      "location": "London, United Kingdom",
+      "secondaryLocations": [
+        { "location": "Paris, France", "address": { "postalAddress": { "addressCountry": "France" } } }
+      ],
+      "publishedAt": "2026-05-13T09:22:35.537+00:00",
+      "isListed": true,
+      "descriptionHtml": "<p>Nothing Swiss on this one, primary or secondary.</p>"
+    },
+    {
+      "id": "5669de71-1934-85c6-fbdc-2d36b7642f62",
+      "title": "Head of Talent",
+      "jobUrl": "https://jobs.ashbyhq.com/deepjudge/5669de71-1934-85c6-fbdc-2d36b7642f62",
+      "location": "Zurich",
+      "secondaryLocations": [],
+      "publishedAt": "2026-04-02T08:00:00.000+00:00",
+      "isListed": false,
+      "descriptionHtml": "<p>Swiss, but Ashby has stopped listing it.</p>"
+    },
+    {
+      "id": "677aef82-2a45-96d7-0ced-3e47c8753073",
+      "title": "Founding Designer",
+      "jobUrl": "https://jobs.ashbyhq.com/deepjudge/677aef82-2a45-96d7-0ced-3e47c8753073",
+      "location": "Zürich",
+      "secondaryLocations": [],
+      "isListed": true,
+      "descriptionHtml": "<p>No publishedAt, so postedAt stays null.</p>"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+ALTER TABLE `search_profiles` ADD `last_rescored_at` integer;

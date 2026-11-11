@@ -1,0 +1,1 @@
+DROP INDEX `jobs_company_idx`;

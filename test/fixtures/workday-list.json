@@ -1,0 +1,61 @@
+{
+  "_comment": [
+    "Source: POST https://roche.wd3.myworkdayjobs.com/wday/cxs/roche/roche-ext/jobs, body",
+    "{appliedFacets:{}, limit:20, offset:0, searchText:''} — captured 2026-10-06. Facets cut to the",
+    "location group (most values dropped), postings cut to four. The locationCountry group is borrowed",
+    "from novartis.wd3/Novartis_Careers so one fixture covers both facet shapes. Adversarial: a",
+    "Baden-Wurttemberg region value beside a Swiss one, a '2 Locations' card, a card with no path."
+  ],
+  "total": 1203,
+  "facets": [
+    { "facetParameter": "timeType", "descriptor": "Full/Part-time", "values": [{ "descriptor": "Full time", "id": "aa", "count": 1190 }] },
+    {
+      "facetParameter": "locationMainGroup",
+      "values": [
+        {
+          "facetParameter": "locationRegionStateProvince",
+          "descriptor": "Region",
+          "values": [
+            { "descriptor": "Baden-Wurttemberg", "id": "fc63a555e1d541379dde6e260bfad7d2", "count": 46 },
+            { "descriptor": "Zurich", "id": "1d92a4308677476480ec390b58b2cad3", "count": 3 }
+          ]
+        },
+        {
+          "facetParameter": "locations",
+          "descriptor": "Locations",
+          "values": [
+            { "descriptor": "Basel", "id": "3543744a0e67010b8e1b9bd75b7637a4", "count": 74 },
+            { "descriptor": "Welwyn", "id": "3543744a0e6701b0b4b0b9e45b765a11", "count": 40 },
+            { "descriptor": "Kaiseraugst", "id": "3543744a0e67011e608a24f75b767ea5", "count": 45 }
+          ]
+        },
+        {
+          "facetParameter": "locationCountry",
+          "descriptor": "Country",
+          "values": [
+            { "descriptor": "Switzerland", "id": "187134fccb084a0ea9b4b95f23890dbe", "count": 38 },
+            { "descriptor": "United Kingdom", "id": "29247e57dbaf46fb855b224e03170bc7", "count": 50 }
+          ]
+        }
+      ]
+    }
+  ],
+  "jobPostings": [
+    {
+      "title": "PhD Clinical Science Fellow (Neuroscience)",
+      "externalPath": "/job/Welwyn/PhD-Clinical-Science-Fellow--Neuroscience-_202608-121188",
+      "locationsText": "Welwyn",
+      "postedOn": "Posted Today",
+      "bulletFields": ["202608-121188"]
+    },
+    {
+      "title": "Global Supply Chain Process Architect – Planning & Regulatory Compliance",
+      "externalPath": "/job/Rotkreuz/Global-Supply-Chain-Process-Architect---Planning---Regulatory-Compliance_202606-115874-1",
+      "locationsText": "2 Locations",
+      "postedOn": "Posted Today",
+      "bulletFields": ["202606-115874"]
+    },
+    { "title": "No path", "locationsText": "Basel", "postedOn": "Posted Today" },
+    { "externalPath": "/job/Basel/No-title_1", "locationsText": "Basel" }
+  ]
+}
