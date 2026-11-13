@@ -16,7 +16,7 @@ export type Employer = {
    * no company field at all, and the others carry the ATS tenant's spelling rather than the legal name.
    */
   company: string
-  platform: 'greenhouse' | 'lever' | 'ashby' | 'recruitee' | 'workable' | 'workday' | 'wordpress' | 'onlyfy'
+  platform: 'greenhouse' | 'lever' | 'ashby' | 'recruitee' | 'workable' | 'workday' | 'wordpress' | 'onlyfy' | 'eightfold'
   token: string
 }
 
@@ -26,6 +26,8 @@ export type Employer = {
  *
  * Some entries currently have no Swiss posting (Esri, NavVis, …). They are watches: one request a
  * run, nothing stored until a Swiss req opens, at which point the Swiss filter admits it.
+ *
+ * Inyova is left out: its Greenhouse board 404s (checked 2026-11).
  */
 export const employers: Employer[] = [
   { company: 'On AG', platform: 'greenhouse', token: 'onrunning' },
@@ -34,7 +36,6 @@ export const employers: Employer[] = [
   { company: 'Auterion', platform: 'greenhouse', token: 'auterion' },
   { company: 'Scandit', platform: 'greenhouse', token: 'scandit' },
   { company: 'Databricks', platform: 'greenhouse', token: 'databricks' },
-  { company: 'GetYourGuide', platform: 'greenhouse', token: 'getyourguide' },
   { company: 'Elastic', platform: 'greenhouse', token: 'elastic' },
   { company: 'Datadog', platform: 'greenhouse', token: 'datadog' },
   { company: 'MongoDB', platform: 'greenhouse', token: 'mongodb' },
@@ -42,7 +43,6 @@ export const employers: Employer[] = [
   { company: 'Anthropic', platform: 'greenhouse', token: 'anthropic' },
   { company: 'Grafana Labs', platform: 'greenhouse', token: 'grafanalabs' },
   { company: 'GitLab', platform: 'greenhouse', token: 'gitlab' },
-  { company: 'Inyova', platform: 'greenhouse', token: 'inyova' },
   { company: 'Anteris Technologies', platform: 'greenhouse', token: 'anteristech' },
   { company: 'WPP Media', platform: 'greenhouse', token: 'wppmedia' },
   { company: 'Alpha Financial Markets Consulting', platform: 'greenhouse', token: 'alphafmcroles' },
@@ -75,6 +75,7 @@ export const employers: Employer[] = [
   { company: 'BLP Digital', platform: 'ashby', token: 'blp-digital' },
   { company: 'Exclaim Robotics', platform: 'ashby', token: 'exclaim' },
   { company: 'Applied Intuition', platform: 'ashby', token: 'applied' },
+  { company: 'GetYourGuide', platform: 'ashby', token: 'getyourguide' }, // left Greenhouse 2026
 
   { company: 'SwissPeak Partners', platform: 'recruitee', token: 'swisspeakpartnersgmbh' },
   { company: 'Climeworks', platform: 'recruitee', token: 'climeworks' },
@@ -107,6 +108,10 @@ export const employers: Employer[] = [
   // disallows only /recruiter/ and /change_language.
   { company: 'Leica Geosystems', platform: 'onlyfy', token: 'leica-geosystems-ag' },
   { company: 'Hexagon Robotics', platform: 'onlyfy', token: 'hexagon-robotics' },
+
+  // Eightfold: token is `{host}/{domain}`. robots.txt disallows / but allows /careers and /api/pcsx.
+  // On runs corporate roles here and keeps retail on Greenhouse (`onrunning` above): both stay.
+  { company: 'On AG', platform: 'eightfold', token: 'jobs.on.com/on.com' },
 ]
 
 /**

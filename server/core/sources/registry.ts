@@ -1,6 +1,7 @@
 import { requestDelayMs } from '../config/env'
 import type { JobSource } from '../types'
 import * as ashby from './ashby'
+import * as eightfold from './eightfold'
 import * as greenhouse from './greenhouse'
 import * as jobsch from './jobsch'
 import * as jobscout24 from './jobscout24'
@@ -148,6 +149,14 @@ export const registry: JobSource[] = [
       '/change_language and asks Crawl-delay: 1, which the 2000ms floor exceeds; /en?page= and ' +
       '/job/show/{id}/full (the ad the public posting page embeds) are allowed. Server-rendered ' +
       'HTML, no API, no token.',
+  ),
+  board(
+    eightfold,
+    'Career pages of tracked employers (Eightfold ATS)',
+    '{host} robots.txt disallows / but explicitly allows /careers and /api/pcsx, the JSON API ' +
+      'the public careers page itself calls (search + position_details), no authentication. ' +
+      'jobs.on.com links no terms of use, only a privacy policy and imprint. Login-gated paths ' +
+      '(apply, notifications) are not touched.',
   ),
   blocked(
     'indeed.ch',

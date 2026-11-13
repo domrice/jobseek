@@ -1,0 +1,48 @@
+{
+  "status": 200,
+  "error": { "message": "", "body": "" },
+  "data": {
+    "count": 69,
+    "positions": [
+      {
+        "id": 563980770984756,
+        "displayJobId": "JR26101372",
+        "name": "Senior Specialist - Deployment Engineer, LightSpray",
+        "locations": ["Zurich"],
+        "standardizedLocations": ["Zürich, ZH, CH"],
+        "postedTs": 1793366152,
+        "creationTs": 1793178743,
+        "department": "Innovation",
+        "workLocationOption": "onsite",
+        "atsJobId": "JR26101372",
+        "positionUrl": "/careers/job/563980770984756"
+      },
+      {
+        "id": 563980770816534,
+        "displayJobId": "JR26101258",
+        "name": "Senior Retail Allocator, EMEA ",
+        "locations": ["Zürich, Switzerland", "London, UK"],
+        "standardizedLocations": ["Zürich, ZH, CH", "London, England, GB"],
+        "postedTs": 1791365061,
+        "creationTs": 1790817176,
+        "department": "Retail",
+        "workLocationOption": "onsite",
+        "atsJobId": "JR26101258",
+        "positionUrl": "/careers/job/563980770816534"
+      },
+      {
+        "id": 563980770758177,
+        "displayJobId": "JR26071070",
+        "name": "Senior Specialist - Sales Representative (Run Speciality)",
+        "locations": ["tokyo"],
+        "standardizedLocations": ["Tokyo,JP"],
+        "postedTs": 1791453707,
+        "creationTs": 1785291175,
+        "department": "Sales",
+        "workLocationOption": "onsite",
+        "atsJobId": "JR26071070",
+        "positionUrl": "/careers/job/563980770758177"
+      }
+    ]
+  }
+}

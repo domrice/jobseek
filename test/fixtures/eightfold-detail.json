@@ -1,0 +1,15 @@
+{
+  "status": 200,
+  "error": { "message": "", "body": "" },
+  "data": {
+    "id": 563980770816534,
+    "displayJobId": "JR26101258",
+    "name": "Senior Retail Allocator, EMEA ",
+    "locations": ["Zurich"],
+    "postedTs": 1791365061,
+    "jobDescription": "<h1 dir=\"ltr\" style=\"line-height: 1.38;\"><span style=\"font-size: 17pt; font-weight: 700;\">At a Glance</span></h1><p dir=\"ltr\" style=\"line-height: 1.38;\"><span style=\"font-size: 11pt;\">As a Senior Retail Allocator, you will combine strong analytical thinking with commercial understanding to ensure inventory is positioned effectively across stores.</span></p>",
+    "positionUrl": "/careers/job/563980770816534",
+    "publicUrl": "https://jobs.on.com/careers/job/563980770816534"
+  },
+  "metadata": null
+}

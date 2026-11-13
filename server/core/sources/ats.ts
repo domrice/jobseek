@@ -4,12 +4,14 @@ import type { Employer } from '../config/employers'
 import { requestDelayMs } from '../config/env'
 import { httpGet } from '../http'
 import { compare } from '../normalize'
-import type { RawJob, SearchResult } from '../types'
+import type { RawJob, SearchResult, Seen } from '../types'
+import { fetchDetails, walkPages } from './board'
 
 /**
- * What every ATS adapter shares. The three board platforms differ only in their URL and their JSON
- * field names — the Swiss test and the per-employer walk are identical, so they live here once
- * rather than three times, the same reason `jsonld.ts` exists.
+ * What every ATS adapter shares. The platforms differ only in their URLs and how they parse — the
+ * Swiss test and the per-employer walk are identical, so they live here once, the same reason
+ * `jsonld.ts` exists. `searchBoards` is the body for one-request platforms, `searchPagedBoards` for
+ * paged lists with a detail fetch per posting.
  */
 
 /**
@@ -27,7 +29,7 @@ import type { RawJob, SearchResult } from '../types'
  * writes at least `Switzerland` on remote roles.
  */
 const SWISS =
-  /\b(switzerland|schweiz|suisse|svizzera|swiss|zurich|geneva|geneve|genf|ginevra|basel|basle|bale|bern|berne|lausanne|lugano|winterthur|st gallen|st\. gallen|sankt gallen|zug|lucerne|luzern|neuchatel|fribourg|freiburg|biel|bienne|thun|sion|chur|schlieren|rotkreuz|kaiseraugst|yverdon|renens|ecublens|wallisellen|opfikon|baar|cham|allschwil|dubendorf|kloten|rapperswil|vevey|montreux|locarno|bellinzona|heerbrugg)\b/
+  /\b(switzerland|schweiz|suisse|svizzera|swiss|zurich|geneva|geneve|genf|ginevra|basel|basle|bale|bern|berne|lausanne|lugano|winterthur|st gallen|st\. gallen|sankt gallen|zug|lucerne|luzern|neuchatel|fribourg|freiburg|biel|bienne|thun|sion|chur|schlieren|rotkreuz|kaiseraugst|yverdon|renens|ecublens|wallisellen|opfikon|baar|cham|allschwil|dubendorf|kloten|rapperswil|vevey|montreux|locarno|bellinzona|heerbrugg|landquart)\b/
 
 /** Does this one string name a Swiss place? Folded first, so diacritics and case do not matter. */
 export function swissPlace(value: string | null | undefined): boolean {
@@ -84,5 +86,46 @@ export function searchBoards(
   return eachEmployer(platform, async employer => {
     await sleep(requestDelayMs)
     return { jobs: parseBoard(await (await httpGet(listUrl(employer))).json(), employer), touched: [] }
+  })
+}
+
+export interface PagedCard {
+  sourceJobId: string
+  /** What `fetchDetails` GETs for the description; `page` is the public posting. */
+  url: string
+  page: string
+  title: string
+  location: string | null
+  postedAt: Date | null
+}
+
+/**
+ * Walk each employer's list pages (`first`, at most `max`), then a detail fetch per unseen card.
+ * `swissPlace` runs after the walk — an all-foreign page would otherwise end it — and before the
+ * details, so a foreign card costs no request. A card with no location is kept. `source` is the
+ * platform name, which every adapter's `name` equals.
+ */
+export function searchPagedBoards(
+  platform: Employer['platform'],
+  seen: Seen,
+  listUrl: (employer: Employer, page: number) => string,
+  parseList: (text: string, employer: Employer) => PagedCard[],
+  parseDetail: (text: string) => { description: string | null },
+  first: number,
+  max: number,
+): Promise<SearchResult> {
+  return eachEmployer(platform, async employer => {
+    const cards = await walkPages(page => listUrl(employer, page), text => parseList(text, employer), first, max)
+    const swiss = [...cards.values()].filter(c => !c.location || swissPlace(c.location))
+    return fetchDetails(swiss, seen, parseDetail, (card, d) => ({
+      source: platform,
+      sourceJobId: card.sourceJobId,
+      url: card.page,
+      title: card.title,
+      company: employer.company,
+      location: card.location,
+      description: d.description,
+      postedAt: card.postedAt,
+    }))
   })
 }
