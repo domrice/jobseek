@@ -1,0 +1,28 @@
+[
+  {
+    "id": "2b1e1de95af3",
+    "friendly_id": "2b1e1de95af3-drone-system-repair-refurbishment-technician",
+    "name": "Drone System Repair & Refurbishment Technician",
+    "url": "https://verity-ag.breezy.hr/p/2b1e1de95af3-drone-system-repair-refurbishment-technician",
+    "published_date": "2026-11-17T13:52:28.915Z",
+    "location": { "country": { "name": "United States", "id": "US" }, "city": "NC 27278", "name": "NC 27278, NC" },
+    "locations": [{ "country": { "name": "United States", "id": "US" }, "city": "NC 27278", "name": "NC 27278, NC" }]
+  },
+  {
+    "id": "c6c557e511c6",
+    "friendly_id": "c6c557e511c6-senior-electronics-engineer-team-lead",
+    "name": "Senior Electronics Engineer & Team Lead ",
+    "url": "https://verity-ag.breezy.hr/p/c6c557e511c6-senior-electronics-engineer-team-lead",
+    "published_date": "2026-11-10T09:12:00.000Z",
+    "location": { "country": { "name": "Switzerland", "id": "CH" }, "city": "Zürich", "name": "Zürich, ZH" },
+    "locations": [{ "country": { "name": "Switzerland", "id": "CH" }, "city": "Zürich", "name": "Zürich, ZH" }]
+  },
+  {
+    "id": "e8d5af459c9e",
+    "friendly_id": "e8d5af459c9e-spontaneous-application",
+    "name": "Spontaneous Application",
+    "url": "https://verity-ag.breezy.hr/p/e8d5af459c9e-spontaneous-application",
+    "published_date": "2024-01-16T15:59:44.421Z",
+    "locations": []
+  }
+]

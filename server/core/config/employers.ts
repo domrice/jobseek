@@ -16,7 +16,19 @@ export type Employer = {
    * no company field at all, and the others carry the ATS tenant's spelling rather than the legal name.
    */
   company: string
-  platform: 'greenhouse' | 'lever' | 'ashby' | 'recruitee' | 'workable' | 'workday' | 'wordpress' | 'onlyfy' | 'eightfold'
+  platform:
+    | 'greenhouse'
+    | 'lever'
+    | 'ashby'
+    | 'recruitee'
+    | 'workable'
+    | 'workday'
+    | 'wordpress'
+    | 'onlyfy'
+    | 'eightfold'
+    | 'breezy'
+    | 'zoho'
+    | 'autoform'
   token: string
 }
 
@@ -112,6 +124,16 @@ export const employers: Employer[] = [
   // Eightfold: token is `{host}/{domain}`. robots.txt disallows / but allows /careers and /api/pcsx.
   // On runs corporate roles here and keeps retail on Greenhouse (`onrunning` above): both stay.
   { company: 'On AG', platform: 'eightfold', token: 'jobs.on.com/on.com' },
+
+  // Breezy: token is the subdomain of {token}.breezy.hr (`verity` is someone else's 404).
+  // robots.txt disallows only asset paths.
+  { company: 'Verity', platform: 'breezy', token: 'verity-ag' },
+
+  // Zoho Recruit: token is `{host}/jobs/{portal}`. robots.txt disallows / but allows /jobs/*.
+  { company: 'F&P Robotics', platform: 'zoho', token: 'fp-robotics.zohorecruit.com/jobs/Career-Site' },
+
+  // AutoForm's own TYPO3 site, no ATS: token is the host. robots.txt disallows /*?, so no filters.
+  { company: 'AutoForm', platform: 'autoform', token: 'careers.autoform.com' },
 ]
 
 /**

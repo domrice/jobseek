@@ -10,8 +10,8 @@ import { fetchDetails, walkPages } from './board'
 /**
  * What every ATS adapter shares. The platforms differ only in their URLs and how they parse — the
  * Swiss test and the per-employer walk are identical, so they live here once, the same reason
- * `jsonld.ts` exists. `searchBoards` is the body for one-request platforms, `searchPagedBoards` for
- * paged lists with a detail fetch per posting.
+ * `jsonld.ts` exists. `searchBoards` / `searchHtmlBoards` are the body for one-request platforms,
+ * `searchPagedBoards` for paged lists with a detail fetch per posting.
  */
 
 /**
@@ -51,8 +51,9 @@ export function swissPlace(value: string | null | undefined): boolean {
  * different thing — that is the source being broken — so it throws and the pipeline records it in
  * `pipeline_runs.errors` instead of quietly storing nothing.
  *
- * `eachEmployer` is that walk and failure rule; `searchBoards` is the one-request body for platforms
- * that return descriptions inline, so its `touched` is always empty — no detail fetch for `seen` to gate.
+ * `eachEmployer` is that walk and failure rule; `searchBoards` (JSON) and `searchHtmlBoards` (a
+ * server-rendered page) are the one-request body for platforms that return descriptions inline, so
+ * their `touched` is always empty — no detail fetch for `seen` to gate.
  */
 export async function eachEmployer(
   platform: Employer['platform'],
@@ -78,15 +79,23 @@ export async function eachEmployer(
   return result
 }
 
+export function searchHtmlBoards(
+  platform: Employer['platform'],
+  listUrl: (employer: Employer) => string,
+  parseBoard: (text: string, employer: Employer) => RawJob[],
+): Promise<SearchResult> {
+  return eachEmployer(platform, async employer => {
+    await sleep(requestDelayMs)
+    return { jobs: parseBoard(await (await httpGet(listUrl(employer))).text(), employer), touched: [] }
+  })
+}
+
 export function searchBoards(
   platform: Employer['platform'],
   listUrl: (employer: Employer) => string,
   parseBoard: (json: unknown, employer: Employer) => RawJob[],
 ): Promise<SearchResult> {
-  return eachEmployer(platform, async employer => {
-    await sleep(requestDelayMs)
-    return { jobs: parseBoard(await (await httpGet(listUrl(employer))).json(), employer), touched: [] }
-  })
+  return searchHtmlBoards(platform, listUrl, (text, employer) => parseBoard(JSON.parse(text), employer))
 }
 
 export interface PagedCard {
@@ -103,14 +112,15 @@ export interface PagedCard {
  * Walk each employer's list pages (`first`, at most `max`), then a detail fetch per unseen card.
  * `swissPlace` runs after the walk — an all-foreign page would otherwise end it — and before the
  * details, so a foreign card costs no request. A card with no location is kept. `source` is the
- * platform name, which every adapter's `name` equals.
+ * platform name, which every adapter's `name` equals. A detail's `postedAt` wins over the card's,
+ * for lists that carry no date.
  */
 export function searchPagedBoards(
   platform: Employer['platform'],
   seen: Seen,
   listUrl: (employer: Employer, page: number) => string,
   parseList: (text: string, employer: Employer) => PagedCard[],
-  parseDetail: (text: string) => { description: string | null },
+  parseDetail: (text: string) => { description: string | null; postedAt?: Date | null },
   first: number,
   max: number,
 ): Promise<SearchResult> {
@@ -125,7 +135,7 @@ export function searchPagedBoards(
       company: employer.company,
       location: card.location,
       description: d.description,
-      postedAt: card.postedAt,
+      postedAt: d.postedAt ?? card.postedAt,
     }))
   })
 }

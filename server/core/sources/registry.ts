@@ -1,6 +1,8 @@
 import { requestDelayMs } from '../config/env'
 import type { JobSource } from '../types'
 import * as ashby from './ashby'
+import * as autoform from './autoform'
+import * as breezy from './breezy'
 import * as eightfold from './eightfold'
 import * as greenhouse from './greenhouse'
 import * as jobsch from './jobsch'
@@ -13,6 +15,7 @@ import * as swissdevjobs from './swissdevjobs'
 import * as workable from './workable'
 import * as workday from './workday'
 import * as wordpress from './wordpress'
+import * as zoho from './zoho'
 import * as zuerijobs from './zuerijobs'
 
 /**
@@ -157,6 +160,29 @@ export const registry: JobSource[] = [
       'the public careers page itself calls (search + position_details), no authentication. ' +
       'jobs.on.com links no terms of use, only a privacy policy and imprint. Login-gated paths ' +
       '(apply, notifications) are not touched.',
+  ),
+  board(
+    breezy,
+    'Career pages of tracked employers (Breezy HR ATS)',
+    '{token}.breezy.hr robots.txt disallows only /css, /fonts, /stylesheets and /javascripts; /json ' +
+      '(the public embed feed) and /p/{id} (the posting page, read for its JSON-LD) are allowed, no ' +
+      'authentication. breezy.hr/terms answers 403 to a non-browser client, so its ToS is unread ' +
+      '(checked 2026-11-18).',
+  ),
+  board(
+    zoho,
+    'Career pages of tracked employers (Zoho Recruit ATS)',
+    '{host} robots.txt disallows / but explicitly allows /jobs/*, the server-rendered career site ' +
+      'we read; the /recruit/v2/public/ JSON API stays untouched. zoho.com/terms has no scraping ' +
+      'clause (checked 2026-11-18). One request per employer, no detail fetch.',
+  ),
+  board(
+    autoform,
+    "AutoForm's own careers site",
+    'careers.autoform.com robots.txt disallows /*? (only ?page=, ?cHash= and friends are allowed), so ' +
+      'the bare /en/jobs/job-search/ list and the /advertisement/ posting pages are read, never a ' +
+      'filter URL. No Crawl-delay; the autoform.com legal page has no scraping clause (checked ' +
+      '2026-11-18).',
   ),
   blocked(
     'indeed.ch',
