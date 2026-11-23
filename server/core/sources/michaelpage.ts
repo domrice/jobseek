@@ -8,6 +8,7 @@ const BASE = 'https://www.michaelpage.ch'
 /** Browse pages, 30 rows each — only walked when the query has no landing page. */
 const MAX_PAGES = 5
 export const name = 'michaelpage'
+export const queryable = true
 
 /** A list card. Description and postedAt come from the detail JSON-LD. */
 type Card = Pick<RawJob, 'sourceJobId' | 'url' | 'title' | 'location'>

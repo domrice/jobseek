@@ -5,6 +5,7 @@ import { jobPostingLd, jobPostingsLd } from './jsonld'
 const BASE = 'https://www.jobs.ch'
 const MAX_PAGES = 10
 export const name = 'jobs.ch'
+export const queryable = true
 
 /** A list card. Only the description comes from the detail page — the card carries the rest. */
 type Card = Pick<RawJob, 'sourceJobId' | 'url' | 'title' | 'company' | 'location' | 'postedAt'>

@@ -6,6 +6,7 @@ import { jobPostingLd } from './jsonld'
 const BASE = 'https://www.zueri.jobs'
 const MAX_PAGES = 10
 export const name = 'zueri.jobs'
+export const queryable = true
 
 /** A list card. Company, location, description and postedAt come from the detail JSON-LD. */
 type Card = Pick<RawJob, 'sourceJobId' | 'url' | 'title'>

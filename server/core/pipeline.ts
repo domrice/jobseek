@@ -9,7 +9,15 @@ import { scoreKeywords } from './score/keyword'
 import { buildScoreRow, judge, priorKey, priorLlm, tooOldToJudge } from './score/row'
 import { registry } from './sources/registry'
 import type { ScoringProvider } from './llm/index'
-import type { JobSource, PipelineResult, PipelineRunInput, ProgressFn, RawJob } from './types'
+import type {
+  JobSource,
+  PipelineResult,
+  PipelineRunInput,
+  ProgressFn,
+  RawJob,
+  SearchQuery,
+  SearchResult,
+} from './types'
 
 /**
  * The one pipeline. Imports nothing from Nitro or h3, so the API route and the CLI are both thin
@@ -72,25 +80,15 @@ export async function runPipeline(
     }
     sourcesQueried.push(source.name)
     onProgress?.({ phase: 'source', name: source.name, index: i + 1, total: enabled.length })
-    try {
-      // One query per source per run, not per card, on the source index. `isNotNull(description)`
-      // so a row whose detail fetch failed on an earlier run is retried rather than skipped forever.
-      const stored = new Set(
-        db
-          .select({ id: jobs.sourceJobId })
-          .from(jobs)
-          .where(and(eq(jobs.source, source.name), isNotNull(jobs.description)))
-          .all()
-          .map(r => r.id),
-      )
-      const res = await source.search({ query: profile.query, location: profile.location ?? undefined }, id =>
-        stored.has(id),
-      )
-      raw.push(...res.jobs)
-      if (res.touched.length) touched.push({ source: source.name, ids: res.touched })
-    } catch (err) {
-      errors.push({ source: source.name, message: (err as Error).message })
-    }
+    const res = await searchBoard(
+      source,
+      { query: profile.query, location: profile.location ?? undefined },
+      errors,
+      signal,
+    )
+    raw.push(...res.jobs)
+    if (res.touched.length) touched.push({ source: source.name, ids: res.touched })
+    stopped ??= res.stopped
     if (i < enabled.length - 1) await sleep(source.rateLimitMs)
   }
 
@@ -207,4 +205,54 @@ export async function runPipeline(
   db.update(pipelineRuns).set({ finishedAt, summary, errors }).where(eq(pipelineRuns.id, runId)).run()
 
   return { runId, profileId: profile.id, startedAt, finishedAt, sourcesQueried, ...written, llmScored, stopped, errors }
+}
+
+/**
+ * One board's search. `query` holds comma-separated terms, the same convention as the keyword
+ * fields: a queryable board runs once per term, one that ignores the query would return the same
+ * set for every term, so it runs once with the whole string. Failures go onto `errors`, as in `judge`.
+ */
+async function searchBoard(
+  source: JobSource,
+  { query, location }: SearchQuery,
+  errors: PipelineResult['errors'],
+  signal?: AbortSignal,
+): Promise<SearchResult & { stopped?: true }> {
+  // One query per source per run, not per card, on the source index. `isNotNull(description)`
+  // so a row whose detail fetch failed on an earlier run is retried rather than skipped forever.
+  const stored = new Set(
+    db
+      .select({ id: jobs.sourceJobId })
+      .from(jobs)
+      .where(and(eq(jobs.source, source.name), isNotNull(jobs.description)))
+      .all()
+      .map(r => r.id),
+  )
+  // Ids already fetched in full this run: a posting two terms both find is detail-fetched and
+  // pushed once, and its second card is not counted as touched.
+  const fetched = new Set<string>()
+  const out: SearchResult = { jobs: [], touched: [] }
+  const split = query
+    .split(',')
+    .map(t => t.trim())
+    .filter(Boolean)
+  // A query of only commas would leave no terms, so the board would never be searched.
+  const terms = source.queryable && split.length ? split : [query]
+  for (const [t, term] of terms.entries()) {
+    if (t) await sleep(source.rateLimitMs)
+    // Checked per term, not only per board: a board's terms add up to minutes of paging.
+    if (signal?.aborted) return { ...out, stopped: true }
+    try {
+      const res = await source.search({ query: term, location }, id => stored.has(id) || fetched.has(id))
+      for (const j of res.jobs) fetched.add(j.sourceJobId)
+      out.jobs.push(...res.jobs)
+      out.touched.push(...res.touched.filter(id => !fetched.has(id)))
+    } catch (err) {
+      // A board down for one term is down for all: the term keeps those messages apart, which
+      // the run panel keys its error list on.
+      const message = (err as Error).message
+      errors.push({ source: source.name, message: source.queryable ? `${term}: ${message}` : message })
+    }
+  }
+  return out
 }

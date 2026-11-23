@@ -6,6 +6,7 @@ import { jobPostingLd } from './jsonld'
 
 const BASE = 'https://www.jobscout24.ch'
 export const name = 'jobscout24'
+export const queryable = true
 
 /** A list card, before the detail fetch fills in description and postedAt. */
 type Card = Pick<RawJob, 'sourceJobId' | 'url' | 'title' | 'company' | 'location'>

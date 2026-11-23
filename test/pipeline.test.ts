@@ -6,7 +6,7 @@ import { PROMPT_VERSION } from '../server/core/llm/index'
 import { runPipeline } from '../server/core/pipeline'
 import { seed } from '../scripts/seed'
 import type { ScoringProvider } from '../server/core/llm/index'
-import type { JobSource, LlmScore, Progress, RawJob, SearchQuery } from '../server/core/types'
+import type { JobSource, LlmScore, Progress, RawJob, SearchQuery, SearchResult } from '../server/core/types'
 
 /** rateLimitMs 0 so the inter-source sleep never bites; the registry floor is not in play here. */
 const source = (name: string, search: JobSource['search']): JobSource => ({
@@ -168,7 +168,7 @@ it('skips a stored card, moves only its lastSeenAt, and never rescores it', asyn
   // Behaves like a real adapter: it consults `seen` per card and reports what it skipped.
   const incremental = (ids: string[], asked: string[]) =>
     source('fake-a', async (_q, seen = () => false) => {
-      const out: { jobs: RawJob[]; touched: string[] } = { jobs: [], touched: [] }
+      const out: SearchResult = { jobs: [], touched: [] }
       for (const id of ids) {
         asked.push(id)
         if (seen(id)) out.touched.push(id)
@@ -196,6 +196,38 @@ it('skips a stored card, moves only its lastSeenAt, and never rescores it', asyn
   // The observable proof the touched card never entered `scored`: a rewritten score row would have
   // moved scoredAt, and a re-normalized empty description would have moved the hash with it.
   expect(scoreOf('inc-1').scoredAt).toEqual(scoreBefore.scoredAt)
+})
+
+// Multi-term profile: a searching board runs once per term and a posting both terms find is
+// fetched once; a board that ignores the query runs once with the whole string.
+it('runs a queryable board per term and fetches a shared posting once', async () => {
+  const setQuery = (query: string) =>
+    db.update(searchProfiles).set({ query }).where(eq(searchProfiles.id, profileId)).run()
+  const asked: string[] = []
+  const hits: Record<string, string[]> = { 'forward deployed': ['t1', 't2'], 'software engineer': ['t2', 't3'] }
+  const terms: JobSource = {
+    ...source('fake-terms', async ({ query }, seen) => {
+      asked.push(query)
+      const out: SearchResult = { jobs: [], touched: [] }
+      for (const id of hits[query]) {
+        if (seen(id)) out.touched.push(id)
+        else
+          out.jobs.push(posting({ source: 'fake-terms', sourceJobId: id, url: `https://t.example/${id}`, title: id }))
+      }
+      return out
+    }),
+    queryable: true,
+  }
+  const once = fake('fake-once', async ({ query }) => (asked.push(query), []))
+
+  setQuery('forward deployed, software engineer')
+  try {
+    const res = await runPipeline({ profileId, useLlm: false }, [terms, once])
+    expect(asked).toEqual(['forward deployed', 'software engineer', 'forward deployed, software engineer'])
+    expect(res).toMatchObject({ fetched: 3, inserted: 3, touched: 0 })
+  } finally {
+    setQuery('typescript engineer')
+  }
 })
 
 // An id no row matches must not throw, and must not be counted — `touched` reports rows changed.

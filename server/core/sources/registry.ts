@@ -26,9 +26,14 @@ import * as zuerijobs from './zuerijobs'
 const rateLimitMs = Math.max(2000, requestDelayMs)
 
 /** An adapter module, enabled at the floor rate. */
-const board = ({ name, search }: Pick<JobSource, 'name' | 'search'>, blurb: string, tosNote: string): JobSource => ({
+const board = (
+  { name, search, queryable }: Pick<JobSource, 'name' | 'search' | 'queryable'>,
+  blurb: string,
+  tosNote: string,
+): JobSource => ({
   name,
   search,
+  queryable,
   enabled: true,
   blurb,
   rateLimitMs,

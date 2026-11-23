@@ -191,8 +191,8 @@ const openForm = (id: number | 'new') => router.replace({ query: { id } })
           <input id="p-name" v-model="form.name" class="w-48" />
         </div>
         <div class="space-y-1">
-          <label for="p-query" class="block text-sm text-muted">Search query</label>
-          <input id="p-query" v-model="form.query" class="w-64" />
+          <label for="p-query" class="block text-sm text-muted">Search terms (comma separated)</label>
+          <input id="p-query" v-model="form.query" class="w-96" />
         </div>
         <div class="space-y-1">
           <label for="p-location" class="block text-sm text-muted">Location</label>

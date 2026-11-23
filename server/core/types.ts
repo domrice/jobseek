@@ -165,6 +165,8 @@ export interface JobSource {
   tosNote: string
   /** One plain line for the run bar's checkbox — what a non-developer needs to decide. */
   blurb?: string
+  /** The board searches by `query`. Only these run once per profile term; the rest return the same set for any term. */
+  queryable?: boolean
   search: (query: SearchQuery, seen: Seen) => Promise<SearchResult>
 }
 
