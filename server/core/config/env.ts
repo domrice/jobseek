@@ -39,8 +39,9 @@ export const llmRescoreDays = num('LLM_RESCORE_DAYS', 30)
  * evergreen recruiter ad or an unfilled role — either way the verdict is not worth the call.
  * Both caps are needed: measured on a 417-row table, every row had been seen within a week
  * (nothing delisted yet) while 66 were dated past 90 days, swissdevjobs' RSS back to 2024.
+ * 21 days: in the current market a role older than three weeks is effectively filled.
  */
-export const llmMaxPostedDays = num('LLM_MAX_POSTED_DAYS', 90)
+export const llmMaxPostedDays = num('LLM_MAX_POSTED_DAYS', 21)
 
 const model = process.env.LLM_MODEL
 

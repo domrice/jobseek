@@ -33,7 +33,7 @@ npm run db:seed          # wipe + fixture data (-- --force skips the prompt)
 npm test
 ```
 
-Config via `.env`: `LLM_MODEL` (an Ollama library tag, e.g. `gemma4:31b-it-qat`; unset = keyword-only), `LLM_BASE_URL`, `LLM_THINK`, `LLM_TIMEOUT_MS`, `LLM_MAX_JOBS`, `LLM_MAX_POSTED_DAYS` (90), `LLM_RESCORE_DAYS` (30), `DATABASE_PATH`.
+Config via `.env`: `LLM_MODEL` (an Ollama library tag, e.g. `gemma4:31b-it-qat`; unset = keyword-only), `LLM_BASE_URL`, `LLM_THINK`, `LLM_TIMEOUT_MS`, `LLM_MAX_JOBS`, `LLM_MAX_POSTED_DAYS` (21), `LLM_RESCORE_DAYS` (30), `DATABASE_PATH`.
 
 ## Core rules
 
