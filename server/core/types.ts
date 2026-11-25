@@ -233,6 +233,9 @@ export const llmScoreSchema = z.object({
   concerns: z.array(z.string()),
   explanation: z.string(),
   confidence: z.number().min(0).max(1),
+  // Last, so it is written after the score and cannot steer it. Only the fast pass asks for it:
+  // getProvider's `tools` picks the format that requires or omits it.
+  tools: z.array(z.string()).optional(),
 })
 export type LlmScore = z.infer<typeof llmScoreSchema>
 

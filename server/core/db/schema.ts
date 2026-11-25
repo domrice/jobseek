@@ -61,7 +61,7 @@ export const jobs = sqliteTable(
 )
 
 export const llmRecommendations = ['strong_match', 'possible_match', 'poor_match'] as const
-type LlmRecommendation =(typeof llmRecommendations)[number]
+type LlmRecommendation = (typeof llmRecommendations)[number]
 
 export const jobScores = sqliteTable(
   'job_scores',
@@ -78,7 +78,10 @@ export const jobScores = sqliteTable(
     keywordDetail: json<{ matched: string[]; missing: string[]; excluded: string[] }>('keyword_detail').notNull(),
     llmScore: real('llm_score'),
     llmRecommendation: text('llm_recommendation').$type<LlmRecommendation>(),
-    llmDetail: json<{ strengths: string[]; gaps: string[]; concerns: string[]; confidence: number }>('llm_detail'),
+    // `tools` absent on verdicts from before PROMPT_VERSION v7.
+    llmDetail: json<{ strengths: string[]; gaps: string[]; concerns: string[]; confidence: number; tools?: string[] }>(
+      'llm_detail',
+    ),
     llmModel: text('llm_model'),
     /**
      * Whether the verdict was produced with thinking on. Together with `llmModel` it is the whole

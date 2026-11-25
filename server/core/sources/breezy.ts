@@ -27,14 +27,16 @@ interface BzPosition {
 const OPEN_APPLICATION = /\b(spontaneous|unsolicited) application\b/i
 
 export function parseList(text: string, { token }: Employer): PagedCard[] {
-  return (JSON.parse(text) as BzPosition[]).filter(p => !OPEN_APPLICATION.test(p.name)).map(p => ({
-    sourceJobId: `${token}:${p.id}`,
-    url: p.url,
-    page: p.url,
-    title: p.name.trim(),
-    location: p.locations?.map(l => [l.name, l.country?.name].filter(Boolean).join(', ')).join('; ') || null,
-    postedAt: toDate(p.published_date),
-  }))
+  return (JSON.parse(text) as BzPosition[])
+    .filter(p => !OPEN_APPLICATION.test(p.name))
+    .map(p => ({
+      sourceJobId: `${token}:${p.id}`,
+      url: p.url,
+      page: p.url,
+      title: p.name.trim(),
+      location: p.locations?.map(l => [l.name, l.country?.name].filter(Boolean).join(', ')).join('; ') || null,
+      postedAt: toDate(p.published_date),
+    }))
 }
 
 export function parseDetail(html: string) {

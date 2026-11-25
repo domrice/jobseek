@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto'
 import { load } from 'cheerio'
-import { legalSuffixes, trackingParams, workModePatterns } from './config/rubric'
+import { legalSuffixes, pensumPatterns, trackingParams, workModePatterns, yearsPatterns } from './config/rubric'
 import type { WorkMode } from './db/schema'
 import type { NormalizedJob, RawJob } from './types'
 
@@ -89,6 +89,19 @@ export function contentHash(parts: (string | null)[]): string {
 /** First pattern in rubric order wins — hybrid is listed before remote. No match → null. */
 export function detectWorkMode(text: string): WorkMode | null {
   return workModePatterns.find(p => p.pattern.test(text))?.mode ?? null
+}
+
+/** "5+ years", "3–5 years", or null when no number sits next to an experience word. */
+export function detectYears(text: string): string | null {
+  const m = yearsPatterns.map(p => text.match(p)).find(Boolean)
+  return m ? `${m[1]}${m[2] ? `–${m[2]}` : (m[3] ?? '')} years` : null
+}
+
+/** "80–100%" or "100%"; the title is asked first, it is where Swiss boards put it. */
+export function detectPensum(title: string, description: string | null): string | null {
+  const m =
+    title.match(pensumPatterns.title) ?? pensumPatterns.description.map(p => description?.match(p)).find(Boolean)
+  return m ? `${m[1]}${m[2] ? `–${m[2]}` : ''}%` : null
 }
 
 /** The one RawJob → NormalizedJob function. Pure: no DB, no network, no framework. */

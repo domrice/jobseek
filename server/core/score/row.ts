@@ -109,18 +109,18 @@ export async function judge(
       break
     }
     try {
-      const llm = await provider.scoreJob({ profile, job })
+      const { score, recommendation, explanation, ...llmDetail } = await provider.scoreJob({ profile, job })
       fresh.set(job.contentHash, {
-        llmScore: llm.score,
-        llmRecommendation: llm.recommendation,
-        llmDetail: { strengths: llm.strengths, gaps: llm.gaps, concerns: llm.concerns, confidence: llm.confidence },
+        llmScore: score,
+        llmRecommendation: recommendation,
+        llmDetail,
         llmModel: provider.model,
         llmThink: provider.think,
         llmPromptVersion: PROMPT_VERSION,
         llmScoredAt: at,
-        explanation: llm.explanation,
+        explanation,
       })
-      if (llm.score >= scoreBands.strong) strong++
+      if (score >= scoreBands.strong) strong++
     } catch (err) {
       errors.push({ source: 'llm', message: `${job.canonicalUrl}: ${(err as Error).message}` })
     }

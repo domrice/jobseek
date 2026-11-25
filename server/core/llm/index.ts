@@ -22,8 +22,9 @@ export interface ScoringProvider {
 /** The only place a `ThinkLevel` becomes Ollama's `think` field. `on` = let the model decide. */
 const thinkField = { off: false, on: true } as const
 
-/** Derived schema for Ollama's `format` field. `$schema` is not accepted there. */
-const { $schema: _, ...jsonSchema } = z.toJSONSchema(llmScoreSchema)
+/** Derived schemas for Ollama's `format` field. `$schema` is not accepted there. */
+const { $schema: _, ...withTools } = z.toJSONSchema(llmScoreSchema.required({ tools: true }))
+const { $schema: __, ...withoutTools } = z.toJSONSchema(llmScoreSchema.omit({ tools: true }))
 
 /**
  * Model output is untrusted text. A fence is the one deviation small local models make often
@@ -46,7 +47,7 @@ export function parseLlmResponse(text: string): LlmScore {
 }
 
 /** Ollama's native chat API. `format` takes a JSON schema, which is stricter than its /v1 shim. */
-const ollama = (baseUrl: string, model: string, level: ThinkLevel): ScoringProvider => ({
+const ollama = (baseUrl: string, model: string, level: ThinkLevel, tools: boolean): ScoringProvider => ({
   model,
   think: level,
   async scoreJob({ profile, job }) {
@@ -72,7 +73,7 @@ const ollama = (baseUrl: string, model: string, level: ThinkLevel): ScoringProvi
         // GGUF re-uploads of the same weights 400 (CLAUDE.md). `off` sends `think: false`, which
         // every model accepts.
         think: thinkField[level],
-        format: jsonSchema,
+        format: tools ? withTools : withoutTools,
         options: {
           // Scoring must be reproducible: the same posting twice should not move the number.
           // Google's gemma-4 card recommends 1.0 with top_p 0.95 / top_k 64 — measured on 32 real
@@ -93,9 +94,16 @@ const ollama = (baseUrl: string, model: string, level: ThinkLevel): ScoringProvi
   },
 })
 
-/** null means no LLM_MODEL, which is a supported mode, not a failure. */
-export function getProvider(think: ThinkLevel = llm?.think ?? 'off', model?: string): ScoringProvider | null {
-  return llm && ollama(llm.baseUrl, model || llm.model, think)
+/**
+ * null means no LLM_MODEL, which is a supported mode, not a failure. `tools`: whether the verdict
+ * also lists the posting's tools — the fast pass only; the deep pass keeps the fast pass's list.
+ */
+export function getProvider(
+  think: ThinkLevel = llm?.think ?? 'off',
+  model?: string,
+  tools = true,
+): ScoringProvider | null {
+  return llm && ollama(llm.baseUrl, model || llm.model, think, tools)
 }
 
 /**

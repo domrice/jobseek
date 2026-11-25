@@ -26,7 +26,8 @@ import type { NormalizedJob, ProgressFn, RescoreInput, RescoreResult } from './t
 export async function rescoreProfile(
   profileId: number,
   input: RescoreInput = { useLlm: false },
-  provider: ScoringProvider | null = getProvider(input.think, input.model),
+  // Tools only on tier 1: the deep pass re-judges, it does not re-extract.
+  provider: ScoringProvider | null = getProvider(input.think, input.model, !input.band),
   // Same optional seam as runPipeline's; there is no `source` phase because nothing is fetched.
   onProgress?: ProgressFn,
   // Cooperative stop: the loop breaks, so every verdict paid for is still written.
@@ -108,8 +109,14 @@ export async function rescoreProfile(
       onProgress,
       signal,
     )
-    // Fanned out over the twins the `claimed` set skipped, which are their own rows.
-    for (const w of work) w.llm = judged.fresh.get(w.hash) ?? w.llm
+    // Fanned out over the twins the `claimed` set skipped, which are their own rows. A deep verdict
+    // has no tools of its own, so it keeps the list the fast pass extracted for this posting.
+    for (const w of work) {
+      const fresh = judged.fresh.get(w.hash)
+      if (!fresh) continue
+      const detail = fresh.llmDetail!
+      w.llm = { ...fresh, llmDetail: { ...detail, tools: detail.tools ?? w.llm?.llmDetail?.tools } }
+    }
   }
 
   onProgress?.({ phase: 'write' })

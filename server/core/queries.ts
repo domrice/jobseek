@@ -2,6 +2,7 @@ import { and, desc, eq, gte, isNotNull, isNull, like, or, sql } from 'drizzle-or
 import { llmMaxPostedDays, llmRescoreDays } from './config/env'
 import { db } from './db/index'
 import { jobScores, jobs } from './db/schema'
+import { detectPensum, detectYears } from './normalize'
 import type { JobListQuery } from './types'
 
 // ponytail: `count(*) over ()` instead of a second COUNT query — one scan, one round trip.
@@ -143,7 +144,14 @@ export function getJob(id: number, profileId?: number) {
         .where(eq(jobs.id, job.duplicateOf))
         .get()
     : undefined
-  return { ...job, score: score ?? null, duplicate: duplicate ?? null }
+  return {
+    ...job,
+    // Read-time, not stored: no column, no backfill, and a pattern edit reaches every job at once.
+    years: detectYears(`${job.title}\n${job.description ?? ''}`),
+    pensum: detectPensum(job.title, job.description),
+    score: score ?? null,
+    duplicate: duplicate ?? null,
+  }
 }
 
 /**

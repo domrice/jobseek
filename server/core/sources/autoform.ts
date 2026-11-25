@@ -32,14 +32,16 @@ export function parseList(html: string, { token }: Employer): PagedCard[] {
       const url = new URL(href, `https://${token}`).toString()
       // `<strong>Switzerland:</strong> Zurich`, one span per location.
       const places = card.find('.fa-map-marker-alt').parent().find('span').toArray()
-      return [{
-        sourceJobId: `${token}:${id}`,
-        url,
-        page: url,
-        title: a.text().trim(),
-        location: places.map(s => $(s).text().trim()).join('; ') || null,
-        postedAt: null,
-      }]
+      return [
+        {
+          sourceJobId: `${token}:${id}`,
+          url,
+          page: url,
+          title: a.text().trim(),
+          location: places.map(s => $(s).text().trim()).join('; ') || null,
+          postedAt: null,
+        },
+      ]
     })
 }
 

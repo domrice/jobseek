@@ -26,6 +26,44 @@ export const workModePatterns: { mode: WorkMode; pattern: RegExp }[] = [
 ]
 
 /**
+ * Years of experience, EN/DE/FR. A number only counts within one sentence of an experience word,
+ * either side of it. Groups: 1 = from, 2 = to, 3 = '+'. "mehrjährige Erfahrung" has no number → null.
+ * Capped at 20, which no posting asks for and every company history exceeds ("80 years of experience
+ * make us a competent partner").
+ *
+ * ponytail: first pattern that matches wins, then its first match. Ceilings: "seit 15 Jahren
+ * bringen wir Erfahrung" reads as 15 years; per-skill years ("3 years Python, 5 years Java") keep
+ * only the first. Upgrade path: add a row, or move it into the LLM's fast-pass schema.
+ */
+const YEARS_UPTO_20 = String.raw`(1?\d|20)`
+const YEARS_N = String.raw`(?<!\d)${YEARS_UPTO_20}(?:\s*(?:-|–|bis|to|à)\s*${YEARS_UPTO_20})?\s*(\+)?\s*(?:years?|yrs|jahre?n?|ans|anni)(?!\p{L})`
+const EXPERIENCE = String.raw`(?:experience|erfahrung|expérience|esperienza)`
+const SAME_SENTENCE = String.raw`[^.\n]{0,40}?`
+export const yearsPatterns = [
+  new RegExp(`${YEARS_N}${SAME_SENTENCE}${EXPERIENCE}`, 'iu'),
+  new RegExp(`${EXPERIENCE}${SAME_SENTENCE}${YEARS_N}`, 'iu'),
+]
+
+/**
+ * Pensum. The title takes any percentage ("Engineer (80-100%)"); the description only a range or one
+ * led by a pensum word, so "50% Rabatt" is not a workload. "100% remote" is a work mode and
+ * "travel 10–20%" a travel share, never a pensum. Groups: 1 = from, 2 = to.
+ */
+const PCT_FROM = String.raw`(?<!\d)(\d{2,3})`
+const PCT_TO = String.raw`\s*%?\s*(?:-|–|bis|à)\s*(\d{2,3})`
+const PCT_END = String.raw`\s*%(?!\s*(?:remote|home|vor ort|on.?site|télétravail))`
+export const pensumPatterns = {
+  title: new RegExp(`${PCT_FROM}(?:${PCT_TO})?${PCT_END}`, 'iu'),
+  description: [
+    new RegExp(
+      `(?:pensum|beschäftigungsgrad|taux d.activité|workload)[^.\\n]{0,20}?${PCT_FROM}(?:${PCT_TO})?${PCT_END}`,
+      'iu',
+    ),
+    new RegExp(`(?<!(?:travel|reise|déplacement)[^.\\n]{0,20})${PCT_FROM}${PCT_TO}${PCT_END}`, 'iu'),
+  ],
+}
+
+/**
  * Legal-form suffixes stripped from the company comparison form, so "Alpine Fintech AG" and
  * "Alpine Fintech" hash the same.
  *

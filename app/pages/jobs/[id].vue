@@ -52,6 +52,15 @@ const noKeywords = computed(
         <span v-if="job.workMode" class="chip" :class="WORK_MODE[job.workMode].tone">{{
           WORK_MODE[job.workMode].label
         }}</span>
+        <!-- Read off the text by regex; absent when the posting states no number. -->
+        <span v-if="job.pensum" class="chip border-line text-muted">{{ job.pensum }}</span>
+        <span v-if="job.years" class="chip border-line text-muted">{{ job.years }} experience</span>
+      </p>
+      <!-- Extracted by the fast model, so only on a judged posting with a v7+ verdict. -->
+      <p v-if="score?.llmDetail?.tools?.length" class="flex flex-wrap gap-1 text-sm">
+        <span v-for="t in score.llmDetail.tools" :key="t" class="rounded border border-line px-1.5 py-0.5">{{
+          t
+        }}</span>
       </p>
       <!-- The mark trails the label: an external-link icon annotates where the link goes, and a
            box-and-arrow leading a phrase reads as a bullet instead. -->

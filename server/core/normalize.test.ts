@@ -5,7 +5,9 @@ import {
   compare,
   compareCompany,
   contentHash,
+  detectPensum,
   detectWorkMode,
+  detectYears,
   htmlToText,
   normalize,
 } from './normalize'
@@ -117,6 +119,33 @@ it('detects remote and onsite in EN, DE and FR', () => {
 it('returns null when the posting says nothing about work mode', () => {
   expect(detectWorkMode('Backend Engineer. TypeScript, Node, SQL.')).toBeNull()
 })
+
+// --- detectYears / detectPensum ---
+
+it.each([
+  ['5+ years of experience in Python', '5+ years'],
+  ["3-5 years' experience", '3–5 years'],
+  ['mind. 3 Jahre Berufserfahrung', '3 years'],
+  ['Erfahrung von mindestens 4 Jahren', '4 years'],
+  ['Experience: 2 to 4 years', '2–4 years'],
+  ["5 ans d'expérience", '5 years'],
+  ['mehrjährige Erfahrung', null],
+  ['Seit 25 Jahren. Erfahrung zählt.', null], // different sentence
+  ['10 answers on experience', null], // "ans" is a word, not a prefix
+  ['80 years of experience make us a competent partner', null], // company history
+])('detectYears(%j) → %j', (text, want) => expect(detectYears(text)).toBe(want))
+
+it.each([
+  ['Engineer (80-100%)', null, '80–100%'],
+  ['Engineer 80% - 100%', null, '80–100%'],
+  ['Ingenieur 100 %', null, '100%'],
+  ['Engineer (100% remote)', null, null],
+  ['Engineer', 'Pensum: 60%', '60%'],
+  ['Engineer', 'Taux d’activité 80 à 100%', '80–100%'],
+  ['Engineer', 'Wir wachsen um 20% pro Jahr.', null],
+  ['Engineer', 'Occasionally travel (10–20%) for workshops', null],
+  ['Engineer', 'Willingness to travel 10%-20%', null],
+])('detectPensum(%j, %j) → %j', (title, desc, want) => expect(detectPensum(title, desc)).toBe(want))
 
 // --- normalize ---
 

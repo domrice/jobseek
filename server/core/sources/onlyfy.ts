@@ -24,9 +24,15 @@ export function parseList(html: string, { token }: Employer): PagedCard[] {
   const out: PagedCard[] = []
   const origin = `https://${token}.onlyfy.jobs`
   $('a[data-testid=job-card]').each((_, a) => {
-    const id = $(a).attr('href')?.match(/\/job\/([^/?]+)/)?.[1]
+    const id = $(a)
+      .attr('href')
+      ?.match(/\/job\/([^/?]+)/)?.[1]
     const title = $(a).find('[data-testid=job-title]').text().trim()
-    const [city, , date] = $(a).find('[data-testid=job-more-info]').text().split('|').map(s => s.trim())
+    const [city, , date] = $(a)
+      .find('[data-testid=job-more-info]')
+      .text()
+      .split('|')
+      .map(s => s.trim())
     if (!id || !title) return
     out.push({
       sourceJobId: `${token}:${id}`,

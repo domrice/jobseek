@@ -125,7 +125,12 @@ export function searchPagedBoards(
   max: number,
 ): Promise<SearchResult> {
   return eachEmployer(platform, async employer => {
-    const cards = await walkPages(page => listUrl(employer, page), text => parseList(text, employer), first, max)
+    const cards = await walkPages(
+      page => listUrl(employer, page),
+      text => parseList(text, employer),
+      first,
+      max,
+    )
     const swiss = [...cards.values()].filter(c => !c.location || swissPlace(c.location))
     return fetchDetails(swiss, seen, parseDetail, (card, d) => ({
       source: platform,

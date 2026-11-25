@@ -6,9 +6,7 @@ const fixture = (name: string) => readFileSync(new URL(`../../../test/fixtures/$
 const on = { company: 'On AG', platform: 'eightfold', token: 'jobs.on.com/on.com' } as const
 
 it('builds the Swiss-filtered list url from host/domain and page', () => {
-  expect(listUrl(on, 2)).toBe(
-    'https://jobs.on.com/api/pcsx/search?domain=on.com&query=&location=Switzerland&start=20',
-  )
+  expect(listUrl(on, 2)).toBe('https://jobs.on.com/api/pcsx/search?domain=on.com&query=&location=Switzerland&start=20')
 })
 
 it('parses positions, keeps foreign ones for the walk', () => {

@@ -298,7 +298,12 @@ it('reports a provider failure without losing the keyword scores', async () => {
 it('re-judges only the band, only for a model that did not write the verdict', async () => {
   unjudge(llmProfile)
   const fast = fakeProvider('fast-model', 55)
-  await rescoreProfile(llmProfile, { useLlm: true }, fast)
+  // Only the fast pass extracts tools; the deep verdict below has none and must keep these.
+  const withTools = {
+    ...fast,
+    scoreJob: async (a: { job: NormalizedJob }) => ({ ...(await fast.scoreJob(a)), tools: ['Vue'] }),
+  }
+  await rescoreProfile(llmProfile, { useLlm: true }, withTools)
   expect(row(twinA, llmProfile).llmScore).toBe(55)
   expect(row(twinA, llmProfile).llmModel).toBe('fast-model')
 
@@ -310,6 +315,7 @@ it('re-judges only the band, only for a model that did not write the verdict', a
   for (const id of [twinA, twinB]) {
     expect(row(id, llmProfile).llmScore).toBe(88)
     expect(row(id, llmProfile).llmModel).toBe('deep-model')
+    expect(row(id, llmProfile).llmDetail?.tools).toEqual(['Vue'])
   }
 
   // Idempotent: every band row now carries this model's own verdict, so a repeat spends nothing.

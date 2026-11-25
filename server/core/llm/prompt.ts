@@ -5,7 +5,7 @@ import type { NormalizedJob, SearchProfile } from '../types'
  * Stored on every score row as `llmPromptVersion`. Bump it whenever the text below changes
  * meaningfully — otherwise two rows scored by different prompts are indistinguishable.
  */
-export const PROMPT_VERSION = 'v6'
+export const PROMPT_VERSION = 'v7'
 
 // ponytail: a fixed character cap instead of a token count. Ceiling: a very long posting loses
 // its tail, which is usually boilerplate. Upgrade path: raise the cap, or chunk and summarise.
@@ -25,6 +25,8 @@ Rules:
 - "confidence" is 0-1 and reflects how much the description actually told you. A thin or
   truncated posting means low confidence, whatever the score.
 - "explanation" is at most three sentences, concrete, no marketing language.
+- "tools", when the schema asks for it, lists the software, programming languages, frameworks and
+  platforms the posting names, as the posting spells them, each once. Nothing it does not name.
 - Reply with valid JSON matching the requested schema. No prose, no markdown, no code fence.`
 
 const list = (label: string, items: string[]) => (items.length ? `${label}: ${items.join(', ')}` : null)
